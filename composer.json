@@ -1,0 +1,14 @@
+{
+  "name": "frogsystem/legacy-polls",
+  "description": "Legacy polls package for Frogsystem Next.",
+  "type": "frogsystem-module",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Moritz Kornher",
+      "email": "mail@moritzkornher.de"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {}
+}
