@@ -14,6 +14,9 @@
     "frogsystem/legacy-bridge": "dev-master"
   },
   "autoload": {
+    "psr-4": {
+      "Frogsystem\\Legacy\\Polls\\": "src/"
+    },
     "files": [
       "src/helpers.php"
     ]
