@@ -12,5 +12,10 @@
   "minimum-stability": "dev",
   "require": {
     "frogsystem/legacy-bridge": "dev-master"
+  },
+  "autoload": {
+    "files": [
+      "src/helpers.php"
+    ]
   }
 }
