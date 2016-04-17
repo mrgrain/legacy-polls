@@ -1,4 +1,8 @@
 <?php
+namespace Frogsystem\Legacy\Polls;
+/** @var \Frogsystem\Legacy\Bridge\Services\GlobalData $FD */
+global $FD, $SCRIPT;
+
 // predefined vars:
 // $SCRIPT['argc'] = number of passed arguments
 // $SCRIPT['argv'] = array of passed arguments (index 0 is the name of the applet)
@@ -15,9 +19,10 @@ $FD->loadConfig('polls');
 //poll id given
 if ($SCRIPT['argc'] >= 2 && is_numeric($SCRIPT['argv'][1])) {
     try {
+        /** @var \PDOStatement $poll_arr */
         $poll_arr = $FD->db()->conn()->query('SELECT * FROM ' . $FD->db()->getPrefix() . 'poll WHERE poll_id = ' . intval($SCRIPT['argv'][1]) . ' LIMIT 1');
-        $poll_arr = $poll_arr->fetch(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
+        $poll_arr = $poll_arr->fetch(\PDO::FETCH_ASSOC);
+    } catch (\Exception $e) {
         $poll_arr = array();
     }
 
@@ -25,38 +30,42 @@ if ($SCRIPT['argc'] >= 2 && is_numeric($SCRIPT['argv'][1])) {
 } elseif ($SCRIPT['argc'] >= 2 && $SCRIPT['argv'][1] == 'random') {
     $date = time();
     try {
+        /** @var \PDOStatement $poll_ids */
         $poll_ids = $FD->db()->conn()->query(
             'SELECT poll_id FROM ' . $FD->db()->getPrefix() . 'poll
                           WHERE `poll_end` > ' . $date . ' AND `poll_start` < ' . $date);
-        $poll_ids = $poll_ids->fetchAll(PDO::FETCH_ASSOC);
-        $filterd_ids = array_filter($poll_ids, create_function('$poll',
-            'return !checkVotedPoll($poll[\'poll_id\']);'));
+        $poll_ids = $poll_ids->fetchAll(\PDO::FETCH_ASSOC);
+        $filterd_ids = array_filter($poll_ids, function ($poll) {
+            return !checkVotedPoll($poll['poll_id']);
+        });
 
         if (count($filterd_ids) == 0)
             $filterd_ids = $poll_ids;
 
         // still no poll
         if (count($filterd_ids) == 0)
-            Throw new ErrorException('No active Poll in Database');
+            Throw new \ErrorException('No active Poll in Database');
 
+        /** @var \PDOStatement $poll_arr */
         $poll_arr = $FD->db()->conn()->query(
             'SELECT * FROM ' . $FD->db()->getPrefix() . 'poll
                       WHERE poll_id = ' . intval($poll_ids[array_rand($filterd_ids)]['poll_id']) . '
                       LIMIT 1');
-        $poll_arr = $poll_arr->fetch(PDO::FETCH_ASSOC);
+        $poll_arr = $poll_arr->fetch(\PDO::FETCH_ASSOC);
         $poll_arr['random'] = true;
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         $poll_arr = array();
     }
 
 // last poll
 } else {
+    /** @var \PDOStatement $poll_arr */
     $poll_arr = $FD->db()->conn()->query(
         'SELECT * FROM ' . $FD->db()->getPrefix() . 'poll
                       WHERE `poll_end` > ' . $FD->env('date') . ' AND `poll_start` < ' . $FD->env('date') . '
                       ORDER BY `poll_start` DESC, `poll_id` DESC
                       LIMIT 0,1');
-    $poll_arr = $poll_arr->fetch(PDO::FETCH_ASSOC);
+    $poll_arr = $poll_arr->fetch(\PDO::FETCH_ASSOC);
 }
 
 //////////////////////////
@@ -78,8 +87,9 @@ if (
     $voter_ip = $_SERVER['REMOTE_ADDR'];
 
     $date = time();
+    /** @var \PDOStatement $index */
     $index = $FD->db()->conn()->query('SELECT * FROM ' . $FD->db()->getPrefix() . 'poll WHERE poll_id = ' . $poll_arr['poll_id']);
-    $poll_arr = $index->fetch(PDO::FETCH_ASSOC);
+    $poll_arr = $index->fetch(\PDO::FETCH_ASSOC);
 
     // Yay! New vote
     if ($poll_arr['poll_end'] > $date && $voted == false) {
@@ -91,6 +101,7 @@ if (
                 $FD->db()->conn()->exec('UPDATE ' . $FD->db()->getPrefix() . "poll SET poll_participants = poll_participants + 1 WHERE poll_id = '" . $poll_arr['poll_id'] . "'");
             }
         } elseif (count($_POST['answer']) > 1) {
+            /** @var \PDOStatement $stmt */
             $stmt = $FD->db()->conn()->prepare('UPDATE ' . $FD->db()->getPrefix() . 'poll_answers SET answer_count = answer_count + 1 WHERE answer_id = ?');
             foreach ($_POST['answer'] as $id) {
                 settype($id, 'integer');
@@ -111,17 +122,20 @@ if (
         }
     }
 
+    /** @var \PDOStatement $index */
     $index = $FD->db()->conn()->query('SELECT poll_participants FROM ' . $FD->db()->getPrefix() . 'poll WHERE poll_id = ' . $poll_arr['poll_id']);
-    $result_poll = $index->fetch(PDO::FETCH_ASSOC);
+    $result_poll = $index->fetch(\PDO::FETCH_ASSOC);
     $poll_arr['poll_participants'] = $result_poll['poll_participants'];
 
+    /** @var \PDOStatement $index */
     $index = $FD->db()->conn()->query('SELECT SUM(answer_count) AS all_votes FROM ' . $FD->db()->getPrefix() . 'poll_answers WHERE poll_id = ' . $poll_arr['poll_id']);
-    $answer_arr = $index->fetch(PDO::FETCH_ASSOC);
+    $answer_arr = $index->fetch(\PDO::FETCH_ASSOC);
     $all_votes = $answer_arr['all_votes'];
 
     $antworten = '';
+    /** @var \PDOStatement $index */
     $index = $FD->db()->conn()->query('SELECT * FROM ' . $FD->db()->getPrefix() . 'poll_answers WHERE poll_id = ' . $poll_arr['poll_id'] . ' ORDER BY answer_id ASC');
-    while ($answer_arr = $index->fetch(PDO::FETCH_ASSOC)) {
+    while ($answer_arr = $index->fetch(\PDO::FETCH_ASSOC)) {
         if ($all_votes != 0) {
             $answer_arr['percentage'] = round($answer_arr['answer_count'] / $all_votes * 100, 1);
             $answer_arr['bar_width'] = round($answer_arr['answer_count'] / $all_votes * $FD->cfg('polls', 'answerbar_width'));
@@ -136,7 +150,7 @@ if (
         }
 
         // Get Template
-        $template = new template();
+        $template = new \template();
         $template->setFile('0_polls.tpl');
         $template->load('APPLET_RESULT_ANSWER_LINE');
 
@@ -150,7 +164,7 @@ if (
     }
 
     // Get Template
-    $template = new template();
+    $template = new \template();
     $template->setFile('0_polls.tpl');
     $template->load('APPLET_RESULT_BODY');
 
@@ -171,9 +185,10 @@ elseif (isset($poll_arr['poll_id']) && !checkVotedPoll($poll_arr['poll_id'])) {
 
     $poll_arr['poll_type_text'] = ($poll_arr['poll_type'] == 1) ? $FD->text("frontend", "multiple_choise") : $FD->text("frontend", "single_choice");
 
+    /** @var \PDOStatement $index2 */
     $index2 = $FD->db()->conn()->query('SELECT * FROM ' . $FD->db()->getPrefix() . 'poll_answers WHERE poll_id = ' . $poll_arr['poll_id'] . ' ORDER BY answer_id ASC');
     initstr($antworten);
-    while ($answer_arr = $index2->fetch(PDO::FETCH_ASSOC)) {
+    while ($answer_arr = $index2->fetch(\PDO::FETCH_ASSOC)) {
         if ($poll_arr['poll_type'] == 0) {
             $poll_arr['poll_type2'] = 'radio';
             $poll_arr['poll_type3'] = '';
@@ -184,7 +199,7 @@ elseif (isset($poll_arr['poll_id']) && !checkVotedPoll($poll_arr['poll_id'])) {
         }
 
         // Get Template
-        $template = new template();
+        $template = new \template();
         $template->setFile('0_polls.tpl');
         $template->load('APPLET_POLL_ANSWER_LINE');
 
@@ -198,7 +213,7 @@ elseif (isset($poll_arr['poll_id']) && !checkVotedPoll($poll_arr['poll_id'])) {
     }
 
     // Get Template
-    $template = new template();
+    $template = new \template();
     $template->setFile('0_polls.tpl');
     $template->load('APPLET_POLL_BODY');
 
@@ -216,7 +231,7 @@ elseif (isset($poll_arr['poll_id']) && !checkVotedPoll($poll_arr['poll_id'])) {
 //////////////////////////
 else {
     // Get Template
-    $template = new template();
+    $template = new \template();
     $template->setFile('0_polls.tpl');
     $template->load('APPLET_NO_POLL');
     $template = $template->display();
@@ -224,5 +239,3 @@ else {
 
 echo $template;
 unset($template);
-
-?>

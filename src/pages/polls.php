@@ -35,14 +35,16 @@ if (isset ($_GET['pollid']) && !isset($_GET['id'])) {
 
 if (isset($_GET['id'])) {
     settype($_GET['id'], 'integer');
+    /** @var \PDOStatement $index */
     $index = $FD->db()->conn()->query('SELECT * FROM `' . $FD->db()->getPrefix() . 'poll` WHERE `poll_id` = ' . $_GET['id']);
-    $poll_arr = $index->fetch(PDO::FETCH_ASSOC);
+    $poll_arr = $index->fetch(\PDO::FETCH_ASSOC);
 
     if ($poll_arr !== false) {
         $poll_arr['poll_start'] = date_loc($FD->config('date'), $poll_arr['poll_start']);
         $poll_arr['poll_end'] = date_loc($FD->config('date'), $poll_arr['poll_end']);
         $poll_arr['poll_type'] = ($poll_arr['poll_type'] == 1) ? $FD->text("frontend", "multiple_choise") : $FD->text("frontend", "single_choice");
         // all votes
+        /** @var \PDOStatement $index */
         $index = $FD->db()->conn()->query("
                         SELECT SUM(`answer_count`) AS 'all_votes'
                         FROM `" . $FD->db()->getPrefix() . 'poll_answers`
@@ -52,7 +54,7 @@ if (isset($_GET['id'])) {
         //Prozentzahlen errechnen und template generieren
         $antworten = '';
         $index = $FD->db()->conn()->query('SELECT * FROM `' . $FD->db()->getPrefix() . 'poll_answers` WHERE `poll_id` = ' . $_GET['id']);
-        while ($answer_arr = $index->fetch(PDO::FETCH_ASSOC)) {
+        while ($answer_arr = $index->fetch(\PDO::FETCH_ASSOC)) {
             if ($poll_arr['all_votes'] != 0) {
                 $answer_arr['prozent'] = round($answer_arr['answer_count'] / $poll_arr['all_votes'] * 100, 1);
                 $answer_arr['bar_width'] = round($answer_arr['answer_count'] / $poll_arr['all_votes'] * $FD->cfg('polls', 'answerbar_width'));
@@ -136,7 +138,8 @@ else {
     }
 
     $list_lines = '';
-    while ($poll_arr = $index->fetch(PDO::FETCH_ASSOC)) {
+    /** @var \PDOStatement $index */
+    while ($poll_arr = $index->fetch(\PDO::FETCH_ASSOC)) {
         $poll_arr['poll_url'] = url('polls', array('id' => $poll_arr['poll_id']));
         $poll_arr['poll_start'] = date_loc($FD->config('date'), $poll_arr['poll_start']);
         $poll_arr['poll_end'] = date_loc($FD->config('date'), $poll_arr['poll_end']);
@@ -150,7 +153,7 @@ else {
         $poll_arr['all_votes'] = $index2->fetchColumn();
 
         // Get Template
-        $template = new template();
+        $template = new \template();
         $template->setFile('0_polls.tpl');
         $template->load('LIST_LINE');
 
@@ -167,7 +170,7 @@ else {
     }
 
     // Get Template
-    $template = new template();
+    $template = new \template();
     $template->setFile('0_polls.tpl');
     $template->load('LIST_BODY');
 
@@ -188,5 +191,3 @@ else {
 
     $template = $template->display();
 }
-
-?>
