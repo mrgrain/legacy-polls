@@ -10,5 +10,7 @@
     }
   ],
   "minimum-stability": "dev",
-  "require": {}
+  "require": {
+    "frogsystem/legacy-bridge": "dev-master"
+  }
 }
