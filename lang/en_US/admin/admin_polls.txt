@@ -1,0 +1,97 @@
+# menu
+group_polls:                    Polls
+
+page_title_tpl_poll:            Edit »Polls«
+page_link_tpl_poll:             Polls
+
+page_title_poll_config:         change configuration
+page_link_poll_config:          configuration
+page_title_poll_add:            add
+page_link_poll_add:             add
+page_title_poll_edit:           edit
+page_link_poll_edit:            edit
+
+
+# admin
+multiple_selection:         Multiple choice
+single_selection:           Single choice
+
+number_of_participants:     Number of participants
+number_of_votes:            Number of votes
+type_of_poll:               Umfrageart
+period_of_poll:             Umfragedauer
+participant:                Teilnehmer
+participants:               Teilnehmer
+participant_s:              Teilnehmer(n)
+vote:                       Vote
+votes:                      Votes
+vote_s:                     Vote(s)
+
+
+# template
+poll_line_title:                       Answer Line
+poll_line_description:                 Answer of the poll.
+poll_line_help_1:                      The text of the answer.
+poll_line_help_2:                      The answer's ID, required by the script to process answers properly.
+poll_line_help_3:                      The poll's type. Necessary, because both types require different selections.
+poll_line_help_4:                      Extension for multiple choice polls.
+poll_body_title:                       Poll Body
+poll_body_description:                 Design of the poll within the menu.
+poll_body_help_1:                      The question of the poll.
+poll_body_help_2:                      Includes all answers, one by one.
+poll_body_help_3:                      Unique ID to identify the poll.
+poll_body_help_4:                      The poll's type. (single or multiple choice)
+poll_no_poll_title:                    No Poll
+poll_no_poll_description:              Message if no poll is active.
+poll_result_line_title:                Result Line
+poll_result_line_description:          A line of the poll result.
+poll_result_line_help_1:               The answer text.
+poll_result_line_help_2:               Number of votes for that answer.
+poll_result_line_help_3:               The share of votes for an answer in percent. (Including percent sign!)
+poll_result_line_help_4:               Width of bar in graphical representation.
+poll_result_title:                     Result Body
+poll_result_description:               Design of the poll result within the menu.
+poll_result_help_1:                    The question of the poll.
+poll_result_help_2:                    Includes all answers and their results.
+poll_result_help_3:                    The number of cast votes.
+poll_result_help_4:                    The number of participants in the poll.
+poll_result_help_5:                    The type of the poll. (single or multiple choice)
+poll_list_line_title:                  Poll List Line
+poll_list_line_description:            Line in the poll list of the poll archive.
+poll_list_line_help_1:                 The question of the poll.
+poll_list_line_help_2:                 URL of the detailed view of the archived poll.
+poll_list_line_help_3:                 The number of cast votes.
+poll_list_line_help_4:                 The number of poll participants.
+poll_list_line_help_5:                 The type of the poll. (single or multiple choice)
+poll_list_line_help_6:                 Date when the poll started.
+poll_list_line_help_7:                 Date of poll's end.
+poll_list_title:                       Poll List Body
+poll_list_description:                 Poll list of the poll archive.
+poll_list_help_1:                      Includes all polls one by one.
+poll_list_help_2:                      Sort parameter for alphabetical sorting by question.
+poll_list_help_3:                      Includes the sort arrow according to the sort order.
+poll_list_help_4:                      Sort parameter for total number of votes.
+poll_list_help_5:                      Includes the sort arrow according to the sort order.
+poll_list_help_6:                      Sort parameter for total number of participants.
+poll_list_help_7:                      Includes the sort arrow according to the sort order.
+poll_list_help_8:                      Sort parameter for poll type.
+poll_list_help_9:                      Includes the sort arrow according to the sort order.
+poll_list_help_10:                     Sort parameter for start date of the poll.
+poll_list_help_11:                     Includes the sort arrow according to the sort order.
+poll_list_help_12:                     Sort parameter for end date of the poll.
+poll_list_help_13:                     Includes the sort arrow according to the sort order.
+poll_main_line_title:                  Archive Answer Line
+poll_main_line_description:            Answer line of an archived poll.
+poll_main_line_help_1:                 The answer text.
+poll_main_line_help_2:                 The number of votes that an answer has received.
+poll_main_line_help_3:                 The share of votes for an answer in percent. (Including percent sign!)
+poll_main_line_help_4:                 Width of bar in graphical representation.
+poll_main_body_title:                  Archive Poll Body
+poll_main_body_description:            Design of an archived poll.
+poll_main_body_help_1:                 The question of the poll.
+poll_main_body_help_2:                 Includes all answers and their results one by one.
+poll_main_body_help_3:                 Total number of cast votes.
+poll_main_body_help_4:                 The number of poll participants.
+poll_main_body_help_5:                 The type of the poll. (single or multiple choice)
+poll_main_body_help_6:                 Date of poll's start.
+poll_main_body_help_7:                 Date of poll's end.

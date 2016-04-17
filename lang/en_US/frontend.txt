@@ -1,0 +1,3 @@
+# polls
+multiple_choice:                Multiple choice
+single_choice:                  Single choice
