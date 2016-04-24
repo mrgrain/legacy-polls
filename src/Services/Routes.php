@@ -1,15 +1,15 @@
 <?php
-namespace Frogsystem\Legacy\Polls;
+namespace Frogsystem\Legacy\Polls\Services;
 
 use Aura\Router\Map;
+use Frogsystem\Legacy\Bridge\Providers\PagesRoutesProvider;
 use Frogsystem\Legacy\Polls\Controllers\PollsController;
-use Frogsystem\Metamorphosis\Providers\RoutesProvider;
 
 /**
  * Class Routes
- * @package Frogsystem\Legacy\Polls
+ * @package Frogsystem\Legacy\Polls\Services
  */
-class Routes extends RoutesProvider
+class Routes extends PagesRoutesProvider
 {
     /**
      * Add the legacy route
@@ -19,7 +19,7 @@ class Routes extends RoutesProvider
     public function registerRoutes(Map $map)
     {
         $map->attach('legacy.', '/', function (Map $map) {
-            $map->get('polls', 'polls/', $this->controller(PollsController::class, 'polls'))->allows(['POST']);
+            $map->get('polls', 'polls/', $this->page('polls', PollsController::class))->allows(['POST']);
         });
     }
 }

@@ -13,15 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 class PollsController extends PageController
 {
     /**
-     * @param View $view
-     * @return ResponseInterface
-     * @internal param ResponseInterface $response
+     * @var string
      */
-    public function polls(View $view)
-    {
-        $template = '';
-        include(__DIR__ . "../pages/polls.php");
-
-        return $this->display($view, $template);
-    }
+    protected $pagePath = __DIR__ . "/../pages";
 }
